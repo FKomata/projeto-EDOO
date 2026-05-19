@@ -14,6 +14,7 @@ private:
     bool primeira_tentativa;
     int tiles_revelados;
 
+    //revelar caso os vizinhos tiverem 0 bombas ao redor
     void cascata(int i, int j);
 public:
     Minefield(int coord_x,int coord_y,int q_bombas);
