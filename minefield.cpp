@@ -68,6 +68,14 @@ void Minefield::gera_matriz()
 void Minefield::calcula_bombas_proximas()
 {
     int contador_bombas = 0;
+    int di[] = {-1,-1,-1,0,0,1,1,1};
+    int dj[] = {-1,0,1,-1,1,-1,0,1};
 
-    
+    for(int i = 0 ; i < 8;i++)
+    {
+        if(matriz[coord_x + di[i]][coord_y + dj[i]].get_tembomba() == true )
+        {
+            contador_bombas += 1;
+        }
+    }    
 }
