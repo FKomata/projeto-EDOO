@@ -5,8 +5,6 @@
 
 
 //vector das coordenadas das bombas
-
-
 Minefield::Minefield(int i, int j, int q) : coord_x(i), coord_y(j) , q_bombas(q) 
 {
     this->primeira_tentativa = true;
@@ -18,21 +16,35 @@ Minefield::Minefield(int i, int j, int q) : coord_x(i), coord_y(j) , q_bombas(q)
 
 void Minefield::gera_matriz()
 {
-    std::vector<std::tuple<int,int>> coord_bombas;
+    std::vector<std::pair<int,int>> coord_bombas;
     srand(time(0));
     
+    int bombas_temp = 0;
+
     //logica de armazenamento de armazenamento de coordenadas de bombas
     //adicionar : verificar se x e y nao estao em coord_bombas + mudar o jeito que é sorteado 
-    for(int i = 0 ; i < q_bombas ; i++)
+    while(bombas_temp < q_bombas)
     {
         int n = rand();
         int bomba_x = n % coord_x;
         int bomba_y = n % coord_y;
-        std::tuple<int, int> tupla_coord = {bomba_x,bomba_y};
-        coord_bombas.push_back(tupla_coord);
+        std::pair<int, int> pair_coord = {bomba_x,bomba_y};
+        bool esta_no_vector = false;
+        for(int j = 0 ; j < coord_bombas.size(); j++)
+        {
+            if(coord_bombas[j] == pair_coord)
+            {
+                esta_no_vector = true;
+            }
+        }
+        if(esta_no_vector == false)
+        {
+            coord_bombas.push_back(pair_coord);
+            bombas_temp++;
+        }
     }
 
-    //gerar matriz espaços vazios + bombas
+    //gerar matriz com apenas os tiles sem bombas
     for(int i = 0 ; i < coord_x; i++)
     {
         std::vector<Tiles> vector_temp;
@@ -43,9 +55,19 @@ void Minefield::gera_matriz()
         }
         matriz.push_back(vector_temp);
     }
+    //loop para adicionar as bombas nas coordenadas
+    for(int a = 0; a < q_bombas; a++)
+    {
+        int coord_i = coord_bombas[a].first;
+        int coord_j = coord_bombas[a].second;
+        
+        matriz[coord_i][coord_j] = Tiles(true);
+    }
 }
 
 void Minefield::calcula_bombas_proximas()
 {
+    int contador_bombas = 0;
 
+    
 }
