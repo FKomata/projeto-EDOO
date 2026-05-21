@@ -18,8 +18,8 @@ private:
     void cascata(int i, int j);
 public:
     Minefield(int coord_x,int coord_y,int q_bombas);
-    void gera_matriz();
-    void calcula_bombas_proximas();
+    void gera_matriz(); // ok
+    void calcula_bombas_proximas(); // ok
     void escavar(int i , int j);
     void botar_bandeira(int i,int j);
     bool verifica_vitoria();

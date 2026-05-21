@@ -25,4 +25,5 @@ public:
 
     //metodos set
     void set_bombasproximas(int quantidade);
+    void set_tipo_tile(Tipo_tile a);
 };

@@ -77,5 +77,48 @@ void Minefield::calcula_bombas_proximas()
         {
             contador_bombas += 1;
         }
-    }    
+    }
+    
+    matriz[coord_x][coord_y].set_bombasproximas(contador_bombas);
+}
+
+void Minefield::escavar(int i , int j)
+{
+    matriz[i][j].set_tipo_tile(Tipo_tile::revelado);
+}
+
+void Minefield::botar_bandeira(int i , int j)
+{
+    matriz[i][j].set_tipo_tile(Tipo_tile::bandeira);
+}
+
+bool Minefield::verifica_vitoria()
+{
+    //deduzir que as matrizes vao ser quadraticas
+    for(int i = 0;i < matriz.size() ; i++)
+    {
+        for(int j = 0; j < matriz.size(); j++)
+        {
+            if(matriz[i][j].get_estado_atual() == Tipo_tile::coberto)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+void Minefield::imprimir()
+{
+    std::cout << "campor minhado : " << std::endl;
+    for(int i = 0; i < matriz.size();i++)
+    {
+        for(int j = 0 ; j < matriz.size(); j++)
+        {
+            std::cout << matriz[i][j].get_conteudo_tile() << ' ';
+        }
+        std::cout << std::endl;
+    }
+
 }

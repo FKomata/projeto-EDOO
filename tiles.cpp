@@ -69,3 +69,10 @@ char Tiles::get_conteudo_tile()
     
 }
 
+void Tiles::set_tipo_tile(Tipo_tile a)
+{
+    this->tipo_tile = a;
+}
+
+
+
