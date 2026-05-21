@@ -26,7 +26,7 @@ void Minefield::gera_matriz()
     while(bombas_temp < q_bombas)
     {
         int n = rand();
-        int bomba_x = n % coord_x;
+        int bomba_x = n % coord_x; 
         int bomba_y = n % coord_y;
         std::pair<int, int> pair_coord = {bomba_x,bomba_y};
         bool esta_no_vector = false;
@@ -98,7 +98,36 @@ void Minefield::calcula_bombas_proximas()
 
 void Minefield::escavar(int i , int j)
 {
-    matriz[i][j].set_tipo_tile(Tipo_tile::revelado);
+    if(matriz[i][j].get_estado_atual() != Tipo_tile::coberto)
+    {
+        return;
+    }
+    else
+    {
+
+        if(primeira_tentativa == true)
+        {
+            matriz[i][j] = Tiles(false);
+            calcula_bombas_proximas();
+            primeira_tentativa = false;
+        }
+
+        if(matriz[i][j].get_tembomba() == true)
+        {
+            matriz[i][j].set_tipo_tile(Tipo_tile::bomba_explodida);
+            //perder vida
+        }
+        
+        matriz[i][j].set_tipo_tile(Tipo_tile::revelado);
+        tiles_revelados++;
+        
+        if(matriz[i][j].get_bombasproximas() == 0)
+        {
+            cascata(i,j);
+        }
+
+    }
+
 }
 
 void Minefield::botar_bandeira(int i , int j)

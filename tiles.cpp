@@ -14,7 +14,7 @@ void Tiles::botar_bandeira()
     {
         this->tipo_tile = Tipo_tile::bandeira;
     }
-    else
+    else if(tipo_tile == Tipo_tile::bandeira)
     {
         this->tipo_tile = Tipo_tile::coberto;
     }
