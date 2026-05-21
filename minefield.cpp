@@ -67,19 +67,33 @@ void Minefield::gera_matriz()
 
 void Minefield::calcula_bombas_proximas()
 {
-    int contador_bombas = 0;
-    int di[] = {-1,-1,-1,0,0,1,1,1};
-    int dj[] = {-1,0,1,-1,1,-1,0,1};
-
-    for(int i = 0 ; i < 8;i++)
+    int di[] = {-1,-1,-1, 0, 0, 1, 1, 1};
+    int dj[] = {-1, 0, 1,-1, 1,-1, 0, 1};
+    
+    //pegar todas as coordenadas e ver o 3 x 3 se tem bomba nesses lados ou não
+    for(int i = 0 ; i < coord_x ; i++)
     {
-        if(matriz[coord_x + di[i]][coord_y + dj[i]].get_tembomba() == true )
+        for(int j = 0; j < coord_y ; j++)
         {
-            contador_bombas += 1;
+            int contador_bombas = 0;
+            for(int k = 0; k < 8; k++)
+            {
+                //aqui ele faz a comparação com o 3x3 da coord i j atual
+                int ni = i + di[k];
+                int nj = j + dj[k];
+                if(ni >= 0 && ni < coord_x && nj >= 0 && nj < coord_y)
+                {   
+                    if(matriz[ni][nj].get_tembomba())
+                    {
+                        contador_bombas++;
+                    }
+                }
+            }
+            matriz[i][j].set_bombasproximas(contador_bombas);
+
         }
     }
     
-    matriz[coord_x][coord_y].set_bombasproximas(contador_bombas);
 }
 
 void Minefield::escavar(int i , int j)
