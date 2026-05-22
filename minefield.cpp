@@ -116,23 +116,59 @@ void Minefield::escavar(int i , int j)
         {
             matriz[i][j].set_tipo_tile(Tipo_tile::bomba_explodida);
             //perder vida
+            tiles_revelados++;
         }
-        
-        matriz[i][j].set_tipo_tile(Tipo_tile::revelado);
-        tiles_revelados++;
-        
-        if(matriz[i][j].get_bombasproximas() == 0)
+        else
         {
-            cascata(i,j);
+            
+            if(matriz[i][j].get_bombasproximas() == 0)
+            {
+                cascata(i,j);
+            }
+            else
+            {
+                matriz[i][j].set_tipo_tile(Tipo_tile::revelado);
+                tiles_revelados++;
+            }
         }
-
+        
     }
 
 }
 
-void Minefield::botar_bandeira(int i , int j)
+void Minefield::cascata(int i,int j)
 {
-    matriz[i][j].set_tipo_tile(Tipo_tile::bandeira);
+    matriz[i][j].set_tipo_tile(Tipo_tile::revelado);
+    tiles_revelados++;
+    
+    if(matriz[i][j].get_bombasproximas() == 0)
+    {
+        int di[] = {-1,-1,-1, 0, 0, 1, 1, 1};
+        int dj[] = {-1, 0, 1,-1, 1,-1, 0, 1};
+    
+        for(int k = 0; k < 8; k++)
+        {
+            int ni = i + di[k];
+            int nj = j + dj[k];
+            if(ni >= 0 && ni < coord_x && nj >= 0 && nj < coord_y)
+            {
+                if(matriz[ni][nj].get_estado_atual() == Tipo_tile::coberto)
+                {
+                    cascata(ni, nj);
+                }
+            }
+        }
+    }
+}
+
+
+void Minefield::bandeira(int i , int j)
+{
+    if(matriz[i][j].get_estado_atual() == Tipo_tile::bandeira || matriz[i][j].get_estado_atual() == Tipo_tile::coberto)
+    {
+        matriz[i][j].botar_bandeira();
+    }
+
 }
 
 bool Minefield::verifica_vitoria()
@@ -140,9 +176,9 @@ bool Minefield::verifica_vitoria()
     //deduzir que as matrizes vao ser quadraticas
     for(int i = 0;i < matriz.size() ; i++)
     {
-        for(int j = 0; j < matriz.size(); j++)
+        for(int j = 0; j < matriz[i].size(); j++)
         {
-            if(matriz[i][j].get_estado_atual() == Tipo_tile::coberto)
+            if(matriz[i][j].get_estado_atual() == Tipo_tile::coberto && matriz[i][j].get_tembomba() == false)
             {
                 return false;
             }
@@ -155,9 +191,9 @@ bool Minefield::verifica_vitoria()
 void Minefield::imprimir()
 {
     std::cout << "campor minhado : " << std::endl;
-    for(int i = 0; i < matriz.size();i++)
+    for(int i = 0; i < coord_x;i++)
     {
-        for(int j = 0 ; j < matriz.size(); j++)
+        for(int j = 0 ; j < matriz[i].size(); j++)
         {
             std::cout << matriz[i][j].get_conteudo_tile() << ' ';
         }

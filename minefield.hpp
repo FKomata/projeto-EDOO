@@ -15,13 +15,13 @@ private:
     int tiles_revelados;
 
     //revelar caso os vizinhos tiverem 0 bombas ao redor
-    void cascata(int i, int j);
+    void cascata(int i, int j); // ok
 public:
     Minefield(int coord_x,int coord_y,int q_bombas);
     void gera_matriz(); // ok
     void calcula_bombas_proximas(); // ok
-    void escavar(int i , int j);
-    void botar_bandeira(int i,int j);
+    void escavar(int i , int j); // ok
+    void bandeira(int i,int j);
     bool verifica_vitoria();
     void imprimir();
 
