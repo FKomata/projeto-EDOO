@@ -9,19 +9,14 @@ class Timer{
         int currentTime;
         bool activated;
     public:
-        Timer(){};
+        Timer(int StartTime, int timLimit, int currentTime, bool activated);
 
-        void SetTimerSeconds(int seconds){ this->startTime = seconds; };
+        void SetTimerSeconds(int seconds);
+        void addTimeSeconds(int seconds);
+        int GetCurrentTimeSeconds();
+        void ActivateTimer();
+        void Ring();
 
-        void addTimeSeconds(int seconds){ this->timeLimit += seconds; };
-
-        int GetCurrentTimeSeconds(){ return this->currentTime; };
-
-        void ActivateTimer(){ 
-            this->activated = true;
-            this->currentTime = this->startTime;
-        };
-
-        void Ring(){ if (this->currentTime <= 0) { this->activated = false; } };
+        void printTimer();
         
 };
