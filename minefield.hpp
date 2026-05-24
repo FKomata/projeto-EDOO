@@ -5,7 +5,7 @@
 #include "tipo_tile.hpp"
 
 
-enum class ResultadoEscavacao { livre, bomba, ja_revelado, bandeirado };
+enum class ResultadoEscavacao { livre, bomba, ja_revelado, bandeirado, coletou_vida, coletou_tempo, coletou_bandeira };
 
 
 class Minefield

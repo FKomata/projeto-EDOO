@@ -87,24 +87,12 @@ ResultadoEscavacao Minefield::escavar(int i, int j)
     Tipo_tile estado = matriz[i][j].get_estado_atual();
     Coletavel coletavel_tile = matriz[i][j].get_coletavel();
 
-    
-    //ja adiciona os atributos em player
-    if(coletavel_tile == Coletavel::vida)
-        return ;
-    
-    if(coletavel_tile == Coletavel::tempo)
-        return ;
-
-    if(coletavel_tile == Coletavel::bandeira)
-        return ;
-
+    // Checagem inicial (Não deixa cavar onde não deve)
     if (estado == Tipo_tile::bandeira)
         return ResultadoEscavacao::bandeirado;
 
-
     if (estado != Tipo_tile::coberto)
         return ResultadoEscavacao::ja_revelado;
-
 
     if (primeira_tentativa)
     {
@@ -131,6 +119,18 @@ ResultadoEscavacao Minefield::escavar(int i, int j)
     {
         matriz[i][j].set_tipo_tile(Tipo_tile::revelado);
         tiles_revelados++;
+    }
+
+    // Tratamento dos coletaveis
+    if (coletavel_tile != Coletavel::nenhum) 
+    {
+        // Remove o coletável do chão para não pegar de novo
+        matriz[i][j].set_coletavel(Coletavel::nenhum); 
+
+        // Retorna o aviso
+        if (coletavel_tile == Coletavel::vida) return ResultadoEscavacao::coletou_vida;
+        if (coletavel_tile == Coletavel::tempo) return ResultadoEscavacao::coletou_tempo;
+        if (coletavel_tile == Coletavel::bandeira) return ResultadoEscavacao::coletou_bandeira;
     }
 
 
@@ -179,7 +179,7 @@ bool Minefield::verifica_vitoria()
 {
     for (int i = 0; i < coord_x; i++)
         for (int j = 0; j < coord_y; j++)
-            if (!matriz[i][j].get_tembomba() && matriz[i][j].get_estado_atual() == Tipo_tile::coberto)
+            if (!matriz[i][j].get_tembomba() && matriz[i][j].get_estado_atual() != Tipo_tile::revelado)
                 return false;
     return true;
 }
