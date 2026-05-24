@@ -1,28 +1,34 @@
 #pragma once
 #include <iostream>
-#include <string>
 #include <vector>
 #include "tiles.hpp"
+
+
+enum class ResultadoEscavacao { livre, bomba, ja_revelado, bandeirado };
+
 
 class Minefield
 {
 private:
-    std::vector<std::vector<Tiles>> matriz;
-    int coord_x;
-    int coord_y;
-    int q_bombas;
-    bool primeira_tentativa;
-    int tiles_revelados;
+   std::vector<std::vector<Tiles>> matriz;
+   int coord_x;
+   int coord_y;
+   bool primeira_tentativa;
+   int tiles_revelados;
 
-    //revelar caso os vizinhos tiverem 0 bombas ao redor
-    void cascata(int i, int j); // ok
+
+   void calcula_bombas_proximas();
+   void mover_bomba(int i, int j);
+   void cascata(int i, int j);
+
+
 public:
-    Minefield(int coord_x,int coord_y,int q_bombas);
-    void gera_matriz(); // ok
-    void calcula_bombas_proximas(); // ok
-    void escavar(int i , int j); // ok
-    void bandeira(int i,int j);
-    bool verifica_vitoria();
-    void imprimir();
+   Minefield(int coord_x, int coord_y);
 
+
+   ResultadoEscavacao escavar(int i, int j);
+   void bandeira(int i, int j);
+   bool verifica_vitoria();
+   void imprimir();
+   Tipo_tile get_tile_estado(int i, int j);
 };
