@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include "tiles.hpp"
+#include "tipo_tile.hpp"
 
 
 enum class ResultadoEscavacao { livre, bomba, ja_revelado, bandeirado };
