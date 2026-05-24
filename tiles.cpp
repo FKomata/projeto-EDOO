@@ -1,7 +1,7 @@
 #include "tiles.hpp"
 
 
-Tiles::Tiles(bool valor) : tem_bomba(valor), bombas_proximas(0) {}
+Tiles::Tiles(bool valor) : tem_bomba(valor), bombas_proximas(0), coletavel(Coletavel::nenhum) {}
 
 
 void Tiles::revelar_tile()
@@ -12,14 +12,14 @@ void Tiles::revelar_tile()
 
 void Tiles::botar_bandeira()
 {
-   if (tipo_tile == Tipo_tile::coberto)
-   {
-       this->tipo_tile = Tipo_tile::bandeira;
-   }
-   else if (tipo_tile == Tipo_tile::bandeira)
-   {
-       this->tipo_tile = Tipo_tile::coberto;
-   }
+    if (tipo_tile == Tipo_tile::coberto)
+    {
+        this->tipo_tile = Tipo_tile::bandeira;
+    }
+    else if (tipo_tile == Tipo_tile::bandeira)
+    {
+        this->tipo_tile = Tipo_tile::coberto;
+    }
 }
 
 
@@ -55,29 +55,38 @@ void Tiles::set_tipo_tile(Tipo_tile a)
 
 char Tiles::get_conteudo_tile()
 {
-   if (tipo_tile == Tipo_tile::coberto)
-   {
-       return '#';
-   }
-   if (tipo_tile == Tipo_tile::bomba_explodida)
-   {
-       return '*';
-   }
-   if (tipo_tile == Tipo_tile::bandeira)
-   {
-       return 'F';
-   }
-   if (tipo_tile == Tipo_tile::revelado)
-   {
-       if (bombas_proximas == 0)
-       {
-           return '.';
-       }
-       else
-       {
-           return '0' + bombas_proximas;
-       }
-   }
+    if (tipo_tile == Tipo_tile::coberto)
+    {
+        return '#';
+    }
+    if (tipo_tile == Tipo_tile::bomba_explodida)
+    {
+        return '*';
+    }
+    if (tipo_tile == Tipo_tile::bandeira)
+    {
+        return 'F';
+    }
+    if (tipo_tile == Tipo_tile::revelado)
+    {
+        if (bombas_proximas == 0)
+        {
+            return '.';
+        }
+        else
+        {
+            return '0' + bombas_proximas;
+        }
+    }
+}
+
+Coletavel Tiles::get_coletavel()
+{
+    return this->coletavel;
+}
+void Tiles::set_coletavel(Coletavel c)
+{
+    this->coletavel = c;
 }
 
 
