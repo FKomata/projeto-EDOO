@@ -1,165 +1,146 @@
 #include "minefield.hpp"
-#include <cstdlib>
-#include <ctime>
-#include <tuple>
 
 
-//vector das coordenadas das bombas
-Minefield::Minefield(int i, int j, int q) : coord_x(i), coord_y(j) , q_bombas(q) 
+Minefield::Minefield(int i, int j)
+   : coord_x(i), coord_y(j), primeira_tentativa(true), tiles_revelados(0)
 {
-    this->primeira_tentativa = true;
-    this->tiles_revelados = 0;
-    
-    gera_matriz();
-    calcula_bombas_proximas();
-}
+   for (int li = 0; li < coord_x; li++)
+   {
+       std::vector<Tiles> row;
+       for (int lj = 0; lj < coord_y; lj++)
+           row.emplace_back(false);
+       matriz.push_back(row);
+   }
 
-void Minefield::gera_matriz()
-{
-    std::vector<std::pair<int,int>> coord_bombas;
-    srand(time(0));
-    
-    int bombas_temp = 0;
 
-    //logica de armazenamento de armazenamento de coordenadas de bombas
-    //adicionar : verificar se x e y nao estao em coord_bombas + mudar o jeito que é sorteado 
-    while(bombas_temp < q_bombas)
-    {
-        int n = rand();
-        int bomba_x = n % coord_x; 
-        int bomba_y = n % coord_y;
-        std::pair<int, int> pair_coord = {bomba_x,bomba_y};
-        bool esta_no_vector = false;
-        for(int j = 0 ; j < coord_bombas.size(); j++)
-        {
-            if(coord_bombas[j] == pair_coord)
-            {
-                esta_no_vector = true;
-            }
-        }
-        if(esta_no_vector == false)
-        {
-            coord_bombas.push_back(pair_coord);
-            bombas_temp++;
-        }
-    }
+   std::vector<std::pair<int,int>> posicoes_bombas = {
+       {0, 5}, {1, 2}, {2, 7}, {3, 4},
+       {4, 0}, {5, 3}, {6, 6}, {7, 1}
+   };
 
-    //gerar matriz com apenas os tiles sem bombas
-    for(int i = 0 ; i < coord_x; i++)
-    {
-        std::vector<Tiles> vector_temp;
-        for(int j = 0; j < coord_y; j++)
-        {
-            Tiles tile(false);
-            vector_temp.push_back(tile);
-        }
-        matriz.push_back(vector_temp);
-    }
-    //loop para adicionar as bombas nas coordenadas
-    for(int a = 0; a < q_bombas; a++)
-    {
-        int coord_i = coord_bombas[a].first;
-        int coord_j = coord_bombas[a].second;
-        
-        matriz[coord_i][coord_j] = Tiles(true);
-    }
+
+   for (auto& [bi, bj] : posicoes_bombas)
+       matriz[bi][bj] = Tiles(true);
+
+
+   calcula_bombas_proximas();
 }
 
 void Minefield::calcula_bombas_proximas()
 {
-    int di[] = {-1,-1,-1, 0, 0, 1, 1, 1};
-    int dj[] = {-1, 0, 1,-1, 1,-1, 0, 1};
-    
-    //pegar todas as coordenadas e ver o 3 x 3 se tem bomba nesses lados ou não
-    for(int i = 0 ; i < coord_x ; i++)
-    {
-        for(int j = 0; j < coord_y ; j++)
-        {
-            int contador_bombas = 0;
-            for(int k = 0; k < 8; k++)
-            {
-                //aqui ele faz a comparação com o 3x3 da coord i j atual
-                int ni = i + di[k];
-                int nj = j + dj[k];
-                if(ni >= 0 && ni < coord_x && nj >= 0 && nj < coord_y)
-                {   
-                    if(matriz[ni][nj].get_tembomba())
-                    {
-                        contador_bombas++;
-                    }
-                }
-            }
-            matriz[i][j].set_bombasproximas(contador_bombas);
+   const int di[] = {-1,-1,-1, 0, 0, 1, 1, 1};
+   const int dj[] = {-1, 0, 1,-1, 1,-1, 0, 1};
 
-        }
-    }
-    
+
+   for (int i = 0; i < coord_x; i++)
+   {
+       for (int j = 0; j < coord_y; j++)
+       {
+           int contador = 0;
+           for (int k = 0; k < 8; k++)
+           {
+               int ni = i + di[k];
+               int nj = j + dj[k];
+               if (ni >= 0 && ni < coord_x && nj >= 0 && nj < coord_y)
+               {
+                   if (matriz[ni][nj].get_tembomba())
+                       contador++;
+               }
+           }
+           matriz[i][j].set_bombasproximas(contador);
+       }
+   }
 }
 
-void Minefield::escavar(int i , int j)
+void Minefield::mover_bomba(int bomb_i, int bomb_j)
 {
-    if(matriz[i][j].get_estado_atual() != Tipo_tile::coberto)
-    {
-        return;
-    }
-    else
-    {
-
-        if(primeira_tentativa == true)
-        {
-            matriz[i][j] = Tiles(false);
-            calcula_bombas_proximas();
-            primeira_tentativa = false;
-        }
-
-        if(matriz[i][j].get_tembomba() == true)
-        {
-            matriz[i][j].set_tipo_tile(Tipo_tile::bomba_explodida);
-            //perder vida
-            tiles_revelados++;
-        }
-        else
-        {
-            
-            if(matriz[i][j].get_bombasproximas() == 0)
-            {
-                cascata(i,j);
-            }
-            else
-            {
-                matriz[i][j].set_tipo_tile(Tipo_tile::revelado);
-                tiles_revelados++;
-            }
-        }
-        
-    }
-
+   for (int i = 0; i < coord_x; i++)
+   {
+       for (int j = 0; j < coord_y; j++)
+       {
+           if (!matriz[i][j].get_tembomba())
+           {
+               matriz[bomb_i][bomb_j] = Tiles(false);
+               matriz[i][j] = Tiles(true);
+               return;
+           }
+       }
+   }
 }
 
-void Minefield::cascata(int i,int j)
+
+
+ResultadoEscavacao Minefield::escavar(int i, int j)
 {
-    matriz[i][j].set_tipo_tile(Tipo_tile::revelado);
-    tiles_revelados++;
-    
-    if(matriz[i][j].get_bombasproximas() == 0)
-    {
-        int di[] = {-1,-1,-1, 0, 0, 1, 1, 1};
-        int dj[] = {-1, 0, 1,-1, 1,-1, 0, 1};
-    
-        for(int k = 0; k < 8; k++)
-        {
-            int ni = i + di[k];
-            int nj = j + dj[k];
-            if(ni >= 0 && ni < coord_x && nj >= 0 && nj < coord_y)
-            {
-                if(matriz[ni][nj].get_estado_atual() == Tipo_tile::coberto)
-                {
-                    cascata(ni, nj);
-                }
-            }
-        }
-    }
+   Tipo_tile estado = matriz[i][j].get_estado_atual();
+
+
+   if (estado == Tipo_tile::bandeira)
+       return ResultadoEscavacao::bandeirado;
+
+
+   if (estado != Tipo_tile::coberto)
+       return ResultadoEscavacao::ja_revelado;
+
+
+   if (primeira_tentativa)
+   {
+       primeira_tentativa = false;
+       if (matriz[i][j].get_tembomba())
+       {
+           mover_bomba(i, j);
+           calcula_bombas_proximas();
+       }
+   }
+
+
+   if (matriz[i][j].get_tembomba())
+   {
+       matriz[i][j].set_tipo_tile(Tipo_tile::bomba_explodida);
+       tiles_revelados++;
+       return ResultadoEscavacao::bomba;
+   }
+
+
+   if (matriz[i][j].get_bombasproximas() == 0)
+       cascata(i, j);
+   else
+   {
+       matriz[i][j].set_tipo_tile(Tipo_tile::revelado);
+       tiles_revelados++;
+   }
+
+
+   return ResultadoEscavacao::livre;
 }
+
+
+void Minefield::cascata(int i, int j)
+{
+   matriz[i][j].set_tipo_tile(Tipo_tile::revelado);
+   tiles_revelados++;
+
+
+   if (matriz[i][j].get_bombasproximas() > 0)
+       return;
+
+
+   const int di[] = {-1,-1,-1, 0, 0, 1, 1, 1};
+   const int dj[] = {-1, 0, 1,-1, 1,-1, 0, 1};
+
+
+   for (int k = 0; k < 8; k++)
+   {
+       int ni = i + di[k];
+       int nj = j + dj[k];
+       if (ni >= 0 && ni < coord_x && nj >= 0 && nj < coord_y)
+       {
+           if (matriz[ni][nj].get_estado_atual() == Tipo_tile::coberto)
+               cascata(ni, nj);
+       }
+   }
+}
+
 
 
 void Minefield::bandeira(int i , int j)
@@ -173,19 +154,11 @@ void Minefield::bandeira(int i , int j)
 
 bool Minefield::verifica_vitoria()
 {
-    //deduzir que as matrizes vao ser quadraticas
-    for(int i = 0;i < matriz.size() ; i++)
-    {
-        for(int j = 0; j < matriz[i].size(); j++)
-        {
-            if(matriz[i][j].get_estado_atual() == Tipo_tile::coberto && matriz[i][j].get_tembomba() == false)
-            {
-                return false;
-            }
-        }
-    }
-
-    return true;
+   for (int i = 0; i < coord_x; i++)
+       for (int j = 0; j < coord_y; j++)
+           if (!matriz[i][j].get_tembomba() && matriz[i][j].get_estado_atual() == Tipo_tile::coberto)
+               return false;
+   return true;
 }
 
 void Minefield::imprimir()
@@ -193,11 +166,16 @@ void Minefield::imprimir()
     std::cout << "campor minhado : " << std::endl;
     for(int i = 0; i < coord_x;i++)
     {
-        for(int j = 0 ; j < matriz[i].size(); j++)
+        for(int j = 0 ; j < coord_y; j++)
         {
             std::cout << matriz[i][j].get_conteudo_tile() << ' ';
         }
         std::cout << std::endl;
     }
 
+}
+
+Tipo_tile Minefield::get_tile_estado(int i, int j)
+{
+   return matriz[i][j].get_estado_atual();
 }
