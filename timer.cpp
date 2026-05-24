@@ -1,39 +1,25 @@
 #include "timer.hpp"
 
-Timer::Timer(int StartTime, int timLimit, int currentTime, bool activated) {
-    this->startTime = StartTime;
-    this->timeLimit = timLimit;
-    this->currentTime = currentTime;
-    this->activated = activated;
+
+Timer::Timer() : ativo(false) {}
+
+
+void Timer::iniciar()
+{
+   inicio = std::chrono::steady_clock::now();
+   ativo = true;
 }
 
-void Timer::SetTimerSeconds(int seconds){
-    this->startTime = seconds;
-    this->currentTime = startTime;
+
+void Timer::parar()
+{
+   fim = std::chrono::steady_clock::now();
+   ativo = false;
 }
 
-void Timer::addTimeSeconds(int seconds){
-    this->currentTime += seconds;
-}
 
-int Timer::GetCurrentTimeSeconds() {
-    return this->currentTime;
-}
-
-void Timer::ActivateTimer() {
-    this->activated = true;
-    this->currentTime = this->startTime;
-}
-
-void Timer::Ring() {
-    if (this->currentTime <= 0) {
-        this->activated = false;
-    }
-
-    cout << "Tempo Esgotado!" << endl;
-}
-
-void Timer:: printTimer() {
-    cout << "Tempo Restante: " << this->startTime << " segundos" << endl;
-
+int Timer::segundos_decorridos() const
+{
+   auto ponto_final = ativo ? std::chrono::steady_clock::now() : fim;
+   return std::chrono::duration_cast<std::chrono::seconds>(ponto_final - inicio).count();
 }
