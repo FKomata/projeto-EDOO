@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include "tipo_tile.hpp"
+#include "coletavel.hpp"
 
 
 class Tiles

@@ -186,7 +186,7 @@ bool Minefield::verifica_vitoria()
 
 void Minefield::imprimir()
 {
-    std::cout << "campor minhado : " << std::endl;
+    std::cout << "CAMPO MINADO : " << std::endl;
     for(int i = 0; i < coord_x;i++)
     {
         for(int j = 0 ; j < coord_y; j++)

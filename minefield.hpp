@@ -3,6 +3,7 @@
 #include <vector>
 #include "tiles.hpp"
 #include "tipo_tile.hpp"
+#include "coletavel.hpp"
 
 
 enum class ResultadoEscavacao { livre, bomba, ja_revelado, bandeirado, coletou_vida, coletou_tempo, coletou_bandeira };
