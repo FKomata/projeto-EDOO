@@ -78,6 +78,8 @@ char Tiles::get_conteudo_tile()
             return '0' + bombas_proximas;
         }
     }
+
+    return '?'; //return de segurança, garante que a função sempre retorna um char, mesmo que o estado seja inesperado
 }
 
 Coletavel Tiles::get_coletavel()
