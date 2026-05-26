@@ -5,31 +5,31 @@ int main()
     GameManager game;
 
     std::vector<Move> roteiro = {
-        // 1. Primeira jogada exigida no 0,0 (Cascata pequena, pois há bombas próximas)
+        // primeira jogada: testa cascata
         {0, 0, ActionType::DIG},
 
-        // 2 e 3. Usar bandeiras (Marcando as bombas do topo)
+        // bandeiras na posicao
         {0, 4, ActionType::FLAG},
         {1, 4, ActionType::FLAG},
 
-        // 4 e 5. Perder duas vidas (Pisando nas bombas isoladas da esquerda)
-        {2, 2, ActionType::DIG}, // BOOM! (-1 vida)
-        {3, 0, ActionType::DIG}, // BOOM! (-1 vida)
+        // Perde duas vidas
+        {2, 2, ActionType::DIG}, //-1 vida
+        {3, 0, ActionType::DIG}, //-1 vida
 
-        // 6 a 11. Coletar Vidas e Itens
-        {2, 3, ActionType::DIG}, // +1 Vida
-        {5, 1, ActionType::DIG}, // +1 Vida
-        {1, 5, ActionType::DIG}, // +10 Segundos
-        {6, 2, ActionType::DIG}, // +10 Segundos
-        {3, 1, ActionType::DIG}, // +1 Bandeira
-        {4, 6, ActionType::DIG}, // +1 Bandeira
+        // coletáveis
+        {2, 3, ActionType::DIG}, //+1 vida
+        {5, 1, ActionType::DIG}, //+1 vida
+        {1, 5, ActionType::DIG}, //+10 segundos
+        {6, 2, ActionType::DIG}, //+10 segundos
+        {3, 1, ActionType::DIG}, //+1 bandeira
+        {4, 6, ActionType::DIG}, //+1 bandeira
 
-        // 12 a 14. Cliques em áreas vazias (0) para abrir as cascatas das bordas
-        {2, 7, ActionType::DIG}, // Abre a direita inteira
-        {7, 2, ActionType::DIG}, // Abre o fundo esquerdo
-        {7, 7, ActionType::DIG}, // Abre o fundo direito
+        // 3 cascatas seguidas
+        {2, 7, ActionType::DIG},
+        {7, 2, ActionType::DIG},
+        {7, 7, ActionType::DIG},
 
-        // 15 em diante. Limpeza manual dos números restantes entre as bombas para VENCER
+        // finaliza o jogo revelando o restante do campo
         {0, 3, ActionType::DIG},
         {0, 5, ActionType::DIG},
         {1, 2, ActionType::DIG},

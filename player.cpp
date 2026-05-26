@@ -1,10 +1,11 @@
 #include "player.hpp"
 
 Player::Player(int vidas, int bandeiras)
-    : vidas(vidas), vidas_max(vidas), pontos(0), 
-      bandeiras(bandeiras), bandeiras_max(bandeiras), 
+    : vidas(vidas), vidas_max(vidas), pontos(0),
+      bandeiras(bandeiras), bandeiras_max(bandeiras),
       tempo_restante(0), tempo_limite(0), timer_ativado(false)
-{}
+{
+}
 
 // Metodos de status geral
 
@@ -17,7 +18,7 @@ void Player::tomar_dano()
 void Player::curar_vida(int quantidade)
 {
     vidas += quantidade;
-    if (vidas > vidas_max) 
+    if (vidas > vidas_max)
         vidas = vidas_max; // Limita a cura ao máximo
 }
 
@@ -99,8 +100,6 @@ void Player::desativar_timer()
 {
     timer_ativado = false;
 }
-
-// Getters
 
 int Player::get_vidas() const
 {

@@ -78,7 +78,7 @@ ResultadoEscavacao Minefield::escavar(int i, int j)
     Tipo_tile estado = matriz[i][j].get_estado_atual();
     Coletavel coletavel_tile = matriz[i][j].get_coletavel();
 
-    // Checagem inicial (Não deixa cavar onde não deve)
+    // checagem inicial (não deixa cavar onde não deve)
     if (estado == Tipo_tile::bandeira)
         return ResultadoEscavacao::bandeirado;
 

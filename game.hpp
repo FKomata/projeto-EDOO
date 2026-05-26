@@ -4,30 +4,41 @@
 #include "minefield.hpp"
 #include "player.hpp"
 
-// Ações possíveis no nosso "roteiro" da simulação
-enum class ActionType { DIG, FLAG };
+// ações possíveis
+enum class ActionType
+{
+    DIG,
+    FLAG
+};
 
-// Representa uma jogada da simulação
-struct Move {
+// representa uma jogada da simulação
+struct Move
+{
     int row;
     int col;
     ActionType action;
 };
 
-// Estados da partida
-enum class GameState { PLAYING, GAME_OVER, VICTORY };
+// estados da partida
+enum class GameState
+{
+    PLAYING,
+    GAME_OVER,
+    VICTORY
+};
 
-class GameManager {
+class GameManager
+{
 private:
     Minefield board;
     Player player;
     GameState state;
 
 public:
-    // Construtor inicializa o campo 8x8 e o player com 7 vidas e 10 bandeiras
+    // construtor inicializa o campo 8x8 e o player com 5 vidas e 5 bandeiras
     GameManager();
 
-    void processar_jogada(const Move& move);
+    void processar_jogada(const Move &move);
     void imprimir_status();
-    void rodar_simulacao(const std::vector<Move>& script);
+    void rodar_simulacao(const std::vector<Move> &script);
 };

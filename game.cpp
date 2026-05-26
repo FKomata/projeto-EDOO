@@ -3,7 +3,7 @@
 GameManager::GameManager()
     : board(8, 8), player(5, 5), state(GameState::PLAYING)
 {
-    // Opcional: define um tempo para demonstrar os coletáveis
+    // define o tempo de jogo
     player.iniciar_timer(30);
 }
 
@@ -12,7 +12,7 @@ void GameManager::processar_jogada(const Move &move)
     if (state != GameState::PLAYING)
         return;
 
-    // Simula a passagem do tempo a cada jogada
+    // simula a passagem do tempo a cada jogada
     player.decrementar_tempo(1);
 
     std::cout << "\n>>> AÇÃO: ";
@@ -21,7 +21,7 @@ void GameManager::processar_jogada(const Move &move)
     {
         std::cout << "Colocar bandeira em (" << move.row << ", " << move.col << ")\n";
 
-        // Se a tile estiver coberta, gasta bandeira. Se já for bandeira, reembolsa.
+        // se a tile estiver coberta, gasta bandeira. Se já for bandeira, reembolsa.
         Tipo_tile estado = board.get_tile_estado(move.row, move.col);
         if (estado == Tipo_tile::coberto)
         {
@@ -78,19 +78,17 @@ void GameManager::processar_jogada(const Move &move)
         }
         else if (res == ResultadoEscavacao::ja_revelado || res == ResultadoEscavacao::bandeirado)
         {
-            // Lógica consertada utilizando OU (||) para capturar ambas as situações inválidas
             std::cout << "Lugar inválido!\n";
         }
-        // -------------------------------------------
 
-        // Verifica se perdeu por tempo
+        // verifica se perdeu por tempo
         if (player.tempo_esgotado())
         {
             std::cout << "Tempo Esgotado!\n";
             state = GameState::GAME_OVER;
         }
 
-        // Verifica vitória se ainda estiver jogando
+        // verifica vitória se ainda estiver jogando
         if (state == GameState::PLAYING && board.verifica_vitoria())
         {
             state = GameState::VICTORY;
@@ -118,7 +116,7 @@ void GameManager::rodar_simulacao(const std::vector<Move> &script)
     for (const auto &move : script)
     {
         if (state != GameState::PLAYING)
-            break; // Para o roteiro se o jogo já acabou
+            break; // para o roteiro se o jogo já acabou
 
         processar_jogada(move);
         imprimir_status();
